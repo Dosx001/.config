@@ -1,0 +1,33 @@
+[user]
+	name = Andres Rodriguez
+	email = andresmichelrodriguez@gmail.com
+[core]
+	editor = nvim
+[init]
+	defaultBranch = main
+[alias]
+	check = sparse-checkout add
+	edit = commit -a --amend --no-edit
+	hard = reset --hard
+	ignore = !sh -c \"cp ~/.gitignore_global .gitignore\"
+	root = !cd `git rev-parse --show-toplevel`
+	sparse = clone --filter=blob:none --sparse
+	sub = submodule update --init
+	unstage = restore --staged
+	pb = !git push --set-upstream origin $(git branch --show-current)
+	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
+  ac = !git add . && git commit
+[credential]
+	helper = store
+[help]
+	autocorrect = 20
+[merge]
+	tool = vimdiff
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[pull]
+	rebase = true

@@ -1,0 +1,13 @@
+/*
+!.gitignore
+
+!mpv/mpv.conf
+!mpv/input.conf
+
+!dotfiles
+!i3
+!kitty
+!nvim
+!polybar
+!redshift
+!rofi
