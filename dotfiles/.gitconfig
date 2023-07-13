@@ -16,7 +16,8 @@
 	unstage = restore --staged
 	pb = !git push --set-upstream origin $(git branch --show-current)
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
-  ac = !git add . && git commit
+	ac = !git add . && git commit
+	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
 [credential]
 	helper = store
 [help]
