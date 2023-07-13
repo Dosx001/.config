@@ -34,8 +34,7 @@ _prompt() {
   else
     echo "$fg[green]`whoami`@`cat /proc/sys/kernel/hostname`"
   fi
-  # git-prompt
-  ~/repos/cli/GitPrompt/bin/git-prompt
+  git-prompt
 }
 
 autoload -U add-zsh-hook
