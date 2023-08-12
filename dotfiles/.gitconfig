@@ -6,18 +6,18 @@
 [init]
 	defaultBranch = main
 [alias]
+	ac = !git add . && git commit
 	check = sparse-checkout add
 	edit = commit -a --amend --no-edit
 	hard = reset --hard
 	ignore = !sh -c \"cp ~/.gitignore_global .gitignore\"
+	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
+	pb = !git push --set-upstream origin $(git branch --show-current)
 	root = !cd `git rev-parse --show-toplevel`
 	sparse = clone --filter=blob:none --sparse
 	sub = submodule update --init
-	unstage = restore --staged
-	pb = !git push --set-upstream origin $(git branch --show-current)
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
-	ac = !git add . && git commit
-	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
+	unstage = restore --staged
 [credential]
 	helper = store
 [help]
