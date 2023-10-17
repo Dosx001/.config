@@ -50,7 +50,6 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 # source ~/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source ~/.zsh/yarn-extra-completion/yarn-extra-completion.plugin.zsh
-source /usr/bin/aws_zsh_completer.sh
 # source ~/dm_completion.zsh
 
 # pip zsh completion start
