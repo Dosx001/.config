@@ -6,9 +6,9 @@ zmodload zsh/complist
 compinit -i
 _comp_options+=(globdots)
 
-alias dm='~/repos/cli/dirman/target/debug/dm'
-
 HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
