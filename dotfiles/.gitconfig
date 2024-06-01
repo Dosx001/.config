@@ -9,6 +9,7 @@
 	ac = !git add . && git commit
 	check = sparse-checkout add
 	edit = commit -a --amend --no-edit
+	graph = log --oneline --graph --name-status
 	hard = reset --hard
 	ignore = !sh -c \"cp ~/.gitignore_global .gitignore\"
 	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
