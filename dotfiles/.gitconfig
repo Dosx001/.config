@@ -18,8 +18,8 @@
 	sparse = clone --filter=blob:none --sparse
 	sub = submodule update --init
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
-	tagbex = !sh -c "jq -r '.version' dist/manifest.json | xargs git tag && git push --tags"
-	tagtau = !sh -c "jq -r '.package.version' src-tauri/tauri.conf.json | xargs git tag && git push --tags"
+	tagbex = !sh -c "jq -r '.version' dist/manifest.json | xargs -i git tag -a {} -m {} && git push --tags"
+	tagtau = !sh -c "jq -r '.package.version' src-tauri/tauri.conf.json | xargs -i git tag -a {} -m {} && git push --tags"
 	unstage = restore --staged
 [credential]
 	helper = store
