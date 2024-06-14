@@ -10,7 +10,7 @@ git submodule update --init
 cd nvim
 git switch main
 cd
-find .config/dotfiles -name '.*' -exec ln -s {} ~ /;
+find .config/dotfiles -name '.*' -exec ln -s {} ~ \;
 ```
 
 ```bash
