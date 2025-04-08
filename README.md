@@ -23,3 +23,8 @@ git clone https://github.com/zdharma-continuum/fast-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions
 source ~/.zshrc
 ```
+
+## FireFox
+
+extensions.webextensions.restrictedDomains  
+privacy.resistFingerprinting.block_mozAddonManager
