@@ -6,6 +6,7 @@
 !mpv/input.conf
 
 !dotfiles
+!git
 !i3
 !kitty
 !nvim

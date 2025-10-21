@@ -11,10 +11,9 @@
 	edit = commit -a --amend --no-edit
 	graph = log --oneline --graph --name-status
 	hard = reset --hard
-	ignore = !sh -c "cp ~/.gitignore_global .gitignore"
 	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
 	pb = !git push --set-upstream origin $(git branch --show-current)
-	root = !cd `git rev-parse --show-toplevel`
+	root = rev-parse --show-toplevel
 	sparse = clone --filter=blob:none --sparse
 	sub = submodule update --init
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
@@ -35,3 +34,8 @@
 	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = true
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
