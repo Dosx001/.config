@@ -13,7 +13,7 @@ def main():
     if buf == b"0":
         print("server not found")
         return
-    s.send(b'{"type":"current"}\n')
+    s.send(b'{"type":"focused"}\n')
     buf = s.recv(1024)
     subprocess.call(["mpv", json.loads(buf.decode("utf-8"))["payload"]])
     s.close()
