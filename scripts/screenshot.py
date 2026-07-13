@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+
+import json
+import os
+import re
+import socket
+import subprocess
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(("localhost", 8080))
+    s.send(b"client\n")
+    buf = s.recv(1)
+    if buf == b"0":
+        print("server not found")
+        return
+    s.send(b'{"type":"current"}\n')
+    buf = s.recv(1024)
+    url: str = json.loads(buf.decode())["payload"]
+    if re.search("crunchyroll.com/watch", url):
+        s.send(b'{"type":"text","query":".show-title-link"}\n')
+        buf = s.recv(1024)
+        title = json.loads(buf.decode())["payload"]
+        s.send(b'{"type":"text","query":"h1"}\n')
+        buf = s.recv(1024)
+        maim(
+            title,
+            json.loads(buf.decode())["payload"].split("-")[0].lstrip("E"),
+        )
+    elif re.search("hidive.com/video", url):
+        s.send(
+            b'{"type":"property",'
+            b'"query":"meta[property=\'og:title\']",'
+            b'"prop":"content"}\n'
+        )
+        buf = s.recv(1024)
+        title = json.loads(buf.decode("utf-8"))["payload"]
+        s.send(b'{"type":"text","query":".player-title"}\n')
+        buf = s.recv(1024)
+        maim(title, json.loads(buf.decode())["payload"].split()[0].lstrip("E"))
+    else:
+        with subprocess.Popen(
+            ["ps", "-AF"],
+            stdout=subprocess.PIPE,
+            text=True,
+        ) as ps:
+            with subprocess.Popen(
+                ["rg", "mpv"],
+                stdin=ps.stdout,
+                stdout=subprocess.PIPE,
+                text=True,
+            ) as rg:
+                stdout, _ = rg.communicate()
+                out = stdout.split("\n")
+                if len(out) == 1:
+                    return
+                title = (
+                    re.search(r"Anime\/.*\/", out[0].split("--")[-1])
+                    .group(0)
+                    .split("/")[1]
+                )
+                match = re.search(r"S\d+E\d+", out[0])
+                if match:
+                    maim(title, match[0].split("E")[1])
+                else:
+                    maim(title, re.search(r"- \d+", out[0]).group(0).lstrip("- "))
+    s.close()
+
+
+def maim(title: str, ep: str):
+    path = "/home/dosx/Pictures/anime/" + title + "/" + ep + "/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+    subprocess.call(
+        [
+            "maim",
+            "-g",
+            "2560x1440+1280+0",
+            f"{path}{len(os.listdir(path))}.png",
+        ]
+    )
+
+
+if __name__ == "__main__":
+    main()
