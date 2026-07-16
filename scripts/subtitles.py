@@ -12,9 +12,9 @@ def main():
         return
     s.send(
         (
-            b'{"type":"execute","frame":true,'
-            b'"code":"{{const e=document.querySelector(\'canvas\');'
-            b"if(e)e.style.display=e.style.display==='none'?'':'none';}}\"}"
+            b'{"type":"execute",'
+            b'"code":"{{const s=document.querySelector(\'canvas\').style;'
+            b"if(s)s.display=s.display==='none'?'':'none';}}\"}"
         )
     )
     s.close()
