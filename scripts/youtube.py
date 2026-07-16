@@ -8,12 +8,12 @@ import subprocess
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("localhost", 8080))
-    s.send(b"client\n")
+    s.send(b"client")
     buf = s.recv(1)
     if buf == b"0":
         print("server not found")
         return
-    s.send(b'{"type":"focused"}\n')
+    s.send(b'{"type":"focused"}')
     buf = s.recv(1024)
     subprocess.call(["mpv", json.loads(buf.decode("utf-8"))["payload"]])
     s.close()

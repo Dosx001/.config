@@ -10,19 +10,19 @@ import subprocess
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(("localhost", 8080))
-    s.send(b"client\n")
+    s.send(b"client")
     buf = s.recv(1)
     if buf == b"0":
         print("server not found")
         return
-    s.send(b'{"type":"current"}\n')
+    s.send(b'{"type":"current"}')
     buf = s.recv(1024)
     url: str = json.loads(buf.decode())["payload"]
     if re.search("crunchyroll.com/watch", url):
-        s.send(b'{"type":"text","query":".show-title-link"}\n')
+        s.send(b'{"type":"text","query":".show-title-link"}')
         buf = s.recv(1024)
         title = json.loads(buf.decode())["payload"]
-        s.send(b'{"type":"text","query":"h1"}\n')
+        s.send(b'{"type":"text","query":"h1"}')
         buf = s.recv(1024)
         maim(
             title,
@@ -32,11 +32,11 @@ def main():
         s.send(
             b'{"type":"property",'
             b'"query":"meta[property=\'og:title\']",'
-            b'"prop":"content"}\n'
+            b'"prop":"content"}'
         )
         buf = s.recv(1024)
         title = json.loads(buf.decode("utf-8"))["payload"]
-        s.send(b'{"type":"text","query":".player-title"}\n')
+        s.send(b'{"type":"text","query":".player-title"}')
         buf = s.recv(1024)
         maim(title, json.loads(buf.decode())["payload"].split()[0].lstrip("E"))
     else:
