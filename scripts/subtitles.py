@@ -17,6 +17,7 @@ def main():
             b"if(s)s.display=s.display==='none'?'':'none';}}\"}"
         )
     )
+    s.recv(1)
     s.close()
 
 
