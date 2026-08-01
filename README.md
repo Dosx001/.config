@@ -26,5 +26,12 @@ source ~/.zshrc
 
 ## FireFox
 
-extensions.webextensions.restrictedDomains  
+extensions.webextensions.restrictedDomains
 privacy.resistFingerprinting.block_mozAddonManager
+browser.newtabpage.activity-stream.topSitesRows
+
+## Discord
+
+```bash
+jq '.SKIP_HOST_UPDATE=true' discord/settings.json > tmp && mv tmp discord/settings.json
+```
