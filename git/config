@@ -14,7 +14,7 @@
 	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
 	pb = !git push --set-upstream origin $(git branch --show-current)
 	root = rev-parse --show-toplevel
-	sign = "!f() { KEY=$(gpg --list-secret-keys | awk '/^ssb/{print p2} {p2=p1; p1=$1}'); git commit -S\"$KEY\" \"$@\"; }; f"
+	sign = "!f() { KEY=$(gpg --list-secret-keys | awk '/^ssb/{print p2} {p2=p1; p1=$1}'); git commit --amend --no-edit -S\"$KEY\"; }; f"
 	sparse = clone --filter=blob:none --sparse
 	sub = submodule update --init
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
