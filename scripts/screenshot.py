@@ -46,25 +46,31 @@ def main():
             text=True,
         ) as ps:
             with subprocess.Popen(
-                ["rg", "mpv"],
+                ["rg", "-e", "mpv", "-e", "Games"],
                 stdin=ps.stdout,
                 stdout=subprocess.PIPE,
                 text=True,
             ) as rg:
                 stdout, _ = rg.communicate()
                 out = stdout.split("\n")
-                if len(out) == 1:
+                if len(out) == 2:
+                    spectacle("other")
                     return
-                title = (
-                    re.search(r"Anime\/.*\/", out[0].split("--")[-1])
-                    .group(0)
-                    .split("/")[1]
-                )
-                match = re.search(r"S\d+E\d+", out[0])
-                if match:
-                    maim(title, match[0].split("E")[1])
-                else:
-                    maim(title, re.search(r"- \d+", out[0]).group(0).lstrip("- "))
+                if re.search(r"mpv", out[0]):
+                    title = (
+                        re.search(r"Anime\/.*\/", out[0].split("--")[-1])
+                        .group(0)
+                        .split("/")[1]
+                    )
+                    match = re.search(r"S\d+E\d+", out[0])
+                    if match:
+                        maim(title, match[0].split("E")[1])
+                    else:
+                        maim(title, re.search(r"- \d+", out[0]).group(0).lstrip("- "))
+                elif re.search(r"Games", out[0]):
+                    title = re.search(r"[\w\s-]+/drive_c", out[0]).group(0)
+                    title = title.split("/")[:-1]
+                    spectacle("games/" + "_".join(title))
     s.close()
 
 
@@ -80,6 +86,13 @@ def maim(title: str, ep: str):
             f"{path}{len(os.listdir(path))}.png",
         ]
     )
+
+
+def spectacle(folder: str):
+    path = "/home/dosx/Pictures/" + folder + "/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+    subprocess.call(["spectacle", "-bo", f"{path}{len(os.listdir(path))}.png"])
 
 
 if __name__ == "__main__":
