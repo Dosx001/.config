@@ -63,8 +63,3 @@ function _pip_completion {
 }
 compctl -K _pip_completion pip
 # pip zsh completion end
-
-
-# tabtab source for packages
-# uninstall by removing these lines
-[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
