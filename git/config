@@ -12,6 +12,7 @@
 	graph = log --oneline --graph --name-status
 	hard = reset --hard
 	nb = !git rev-parse --abbrev-ref origin/HEAD | cut -c8- | git switch - && git pull && git checkout -b
+	open = !~/.config/scripts/open.sh
 	pb = !git push --set-upstream origin $(git branch --show-current)
 	root = rev-parse --show-toplevel
 	sign = "!f() { KEY=$(gpg --list-secret-keys | awk '/^ssb/{print p2} {p2=p1; p1=$1}'); git commit --amend --no-edit -S\"$KEY\"; }; f"
