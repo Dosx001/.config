@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/python
 
 import json
 import os
@@ -9,7 +9,7 @@ import subprocess
 
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("localhost", 8080))
+    s.connect(("127.0.0.1", 8080))
     s.send(b"client")
     buf = s.recv(1)
     if buf == b"0":
