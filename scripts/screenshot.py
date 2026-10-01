@@ -5,6 +5,9 @@ import os
 import re
 import socket
 import subprocess
+import urllib.request
+from html.parser import HTMLParser
+from urllib.parse import parse_qs, urlparse
 
 
 def main():
@@ -29,17 +32,22 @@ def main():
             json.loads(buf.decode())["payload"].split("-")[0].lstrip("E"),
         )
     elif re.search("hidive.com/video", url):
-        s.send(
-            b'{"type":"property",'
-            b'"query":"meta[property=\'og:title\']",'
-            b'"prop":"content"}'
-        )
-        title = s.recv(1024)
         s.send(b'{"type":"text","query":".player-title"}')
         buf = s.recv(1024)
         s.close()
+        with urllib.request.urlopen(
+            urllib.request.Request(
+                f"https://www.hidive.com/season/{
+                    parse_qs(urlparse(url).query)['seasonId'][0]
+                }"
+            ),
+            timeout=10,
+        ) as response:
+            html = response.read().decode()
+        parser = MetadataParser()
+        parser.feed(html)
         maim(
-            json.loads(title.decode("utf-8"))["payload"],
+            "-".join(parser.title.split("-")[:-1]),
             json.loads(buf.decode())["payload"].split()[0].lstrip("E"),
         )
     else:
@@ -96,6 +104,25 @@ def spectacle(folder: str):
     if not os.path.exists(path):
         os.makedirs(path)
     subprocess.call(["spectacle", "-bo", f"{path}{len(os.listdir(path))}.png"])
+
+
+class MetadataParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.title = ""
+        self.in_title = False
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "title":
+            self.in_title = True
+
+    def handle_data(self, data):
+        if self.in_title:
+            self.title = data
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self.in_title = False
 
 
 if __name__ == "__main__":
