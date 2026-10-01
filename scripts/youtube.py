@@ -15,8 +15,8 @@ def main():
         return
     s.send(b'{"type":"focused"}')
     buf = s.recv(1024)
-    subprocess.call(["mpv", json.loads(buf.decode("utf-8"))["payload"]])
     s.close()
+    subprocess.call(["mpv", json.loads(buf.decode("utf-8"))["payload"], "--keep-open"])
 
 
 if __name__ == "__main__":

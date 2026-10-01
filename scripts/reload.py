@@ -13,8 +13,8 @@ def main():
         return
     s.send(b'{"type":"reload","tab":{"title":"/*"}}')
     buf = s.recv(1024)
-    print(buf.decode("utf-8"))
     s.close()
+    print(buf.decode("utf-8"))
 
 
 if __name__ == "__main__":

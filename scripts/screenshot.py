@@ -20,12 +20,12 @@ def main():
     url: str = json.loads(buf.decode())["payload"]
     if re.search("crunchyroll.com/watch", url):
         s.send(b'{"type":"text","query":".show-title-link"}')
-        buf = s.recv(1024)
-        title = json.loads(buf.decode())["payload"]
+        title = s.recv(1024)
         s.send(b'{"type":"text","query":"h1"}')
         buf = s.recv(1024)
+        s.close()
         maim(
-            title,
+            json.loads(title.decode())["payload"],
             json.loads(buf.decode())["payload"].split("-")[0].lstrip("E"),
         )
     elif re.search("hidive.com/video", url):
@@ -34,12 +34,16 @@ def main():
             b'"query":"meta[property=\'og:title\']",'
             b'"prop":"content"}'
         )
-        buf = s.recv(1024)
-        title = json.loads(buf.decode("utf-8"))["payload"]
+        title = s.recv(1024)
         s.send(b'{"type":"text","query":".player-title"}')
         buf = s.recv(1024)
-        maim(title, json.loads(buf.decode())["payload"].split()[0].lstrip("E"))
+        s.close()
+        maim(
+            json.loads(title.decode("utf-8"))["payload"],
+            json.loads(buf.decode())["payload"].split()[0].lstrip("E"),
+        )
     else:
+        s.close()
         with subprocess.Popen(
             ["ps", "-AF"],
             stdout=subprocess.PIPE,
@@ -71,7 +75,6 @@ def main():
                     title = re.search(r"[\w\s-]+/drive_c", out[0]).group(0)
                     title = title.split("/")[:-1]
                     spectacle("games/" + "_".join(title))
-    s.close()
 
 
 def maim(title: str, ep: str):
