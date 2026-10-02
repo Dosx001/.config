@@ -43,46 +43,47 @@ def main():
             ),
             timeout=10,
         ) as response:
-            html = response.read().decode()
-        parser = MetadataParser()
-        parser.feed(html)
-        maim(
-            "-".join(parser.title.split("-")[:-1]),
-            json.loads(buf.decode())["payload"].split()[0].lstrip("E"),
-        )
+            parser = TitleParser()
+            parser.feed(response.read().decode())
+            maim(
+                parser.title,
+                json.loads(buf.decode())["payload"].split()[0].lstrip("E"),
+            )
     else:
         s.close()
-        with subprocess.Popen(
-            ["ps", "-AF"],
-            stdout=subprocess.PIPE,
-            text=True,
-        ) as ps:
-            with subprocess.Popen(
+        with (
+            subprocess.Popen(
+                ["ps", "-AF"],
+                stdout=subprocess.PIPE,
+                text=True,
+            ) as ps,
+            subprocess.Popen(
                 ["rg", "-e", "mpv", "-e", "Games"],
                 stdin=ps.stdout,
                 stdout=subprocess.PIPE,
                 text=True,
-            ) as rg:
-                stdout, _ = rg.communicate()
-                out = stdout.split("\n")
-                if len(out) == 2:
-                    spectacle("other")
-                    return
-                if re.search(r"mpv", out[0]):
-                    title = (
-                        re.search(r"Anime\/.*\/", out[0].split("--")[-1])
-                        .group(0)
-                        .split("/")[1]
-                    )
-                    match = re.search(r"S\d+E\d+", out[0])
-                    if match:
-                        maim(title, match[0].split("E")[1])
-                    else:
-                        maim(title, re.search(r"- \d+", out[0]).group(0).lstrip("- "))
-                elif re.search(r"Games", out[0]):
-                    title = re.search(r"[\w\s-]+/drive_c", out[0]).group(0)
-                    title = title.split("/")[:-1]
-                    spectacle("games/" + "_".join(title))
+            ) as rg,
+        ):
+            stdout, _ = rg.communicate()
+            out = stdout.split("\n")
+            if len(out) == 2:
+                spectacle("other")
+                return
+            if re.search(r"mpv", out[0]):
+                title = (
+                    re.search(r"Anime\/.*\/", out[0].split("--")[-1])
+                    .group(0)
+                    .split("/")[1]
+                )
+                match = re.search(r"S\d+E\d+", out[0])
+                if match:
+                    maim(title, match[0].split("E")[1])
+                else:
+                    maim(title, re.search(r"- \d+", out[0]).group(0).lstrip("- "))
+            elif re.search(r"Games", out[0]):
+                title = re.search(r"[\w\s-]+/drive_c", out[0]).group(0)
+                title = title.split("/")[:-1]
+                spectacle("games/" + "_".join(title))
 
 
 def maim(title: str, ep: str):
@@ -106,7 +107,7 @@ def spectacle(folder: str):
     subprocess.call(["spectacle", "-bo", f"{path}{len(os.listdir(path))}.png"])
 
 
-class MetadataParser(HTMLParser):
+class TitleParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.title = ""
@@ -118,7 +119,7 @@ class MetadataParser(HTMLParser):
 
     def handle_data(self, data):
         if self.in_title:
-            self.title = data
+            self.title = "-".join(data.split("-")[:-1])
 
     def handle_endtag(self, tag):
         if tag == "title":
