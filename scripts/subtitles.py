@@ -12,11 +12,9 @@ def main():
         print("server not found")
         return
     s.send(
-        (
-            b'{"type":"execute",'
-            b'"code":"{{const s=document.querySelector(\'canvas\').style;'
-            b"if(s)s.display=s.display==='none'?'':'none';}}\"}"
-        )
+        b'{"type":"execute","details":{'
+        b'"code":"{{const s=document.querySelector(\'canvas\').style;'
+        b"if(s)s.display=s.display==='none'?'':'none';}}\"}}"
     )
     s.recv(1)
     s.close()
