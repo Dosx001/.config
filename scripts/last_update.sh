@@ -5,20 +5,19 @@ resurrect() {
 	[ -e "$file" ] || return
 	age=$(($(date +%s) - $(stat -c %Y "$file")))
 	if [ "$age" -lt 60 ]; then
-		printf "💾 %ds" "$age"
+		printf "%ds" "$age"
 	elif [ "$age" -lt 3600 ]; then
-		printf "💾 %dm" $((age / 60))
+		printf "%dm" $((age / 60))
 	elif [ "$age" -lt 86400 ]; then
-		printf "💾 %dh" $((age / 3600))
+		printf "%dh" $((age / 3600))
 	else
-		printf "💾 %dd" $((age / 86400))
+		printf "%dd" $((age / 86400))
 	fi
 }
 
 pacman() {
-	datetime=$(tail -n 1000 /var/log/pacman.log |
-		tac |
-		rg -m1 "pacman --sync -y -u" |
+	datetime=$(rg "pacman --sync -y -u" /var/log/pacman.log |
+		tail -n1 |
 		cut -d' ' -f1 |
 		tr -d '[]')
 	[ -z "$datetime" ] && return
@@ -35,7 +34,7 @@ pacman() {
 	if [ -z "$result" ]; then
 		result=" 0d"
 	fi
-	printf "🔃%s" "$result"
+	printf "%s" "$result"
 }
 
-printf "%s | %s" "$(resurrect)" "$(pacman)"
+printf "💾 %s | 🔃%s" "$(resurrect)" "$(pacman)"
