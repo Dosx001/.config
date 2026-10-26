@@ -19,8 +19,7 @@
 	sparse = clone --filter=blob:none --sparse
 	sub = submodule update --init
 	sync = !git fetch upstream && git rebase upstream/$(git branch --show-current)
-	tagbex = "!f() { VERSION=$(jq -r '.version' dist/manifest.json); git tag -a $VERSION -m $VERSION && git push --tags; }; f"
-	tagtau = "!f() { VERSION=$(jq -r '.package.version' src-tauri/tauri.conf.json); git tag -a $VERSION -m $VERSION && git push --tags; }; f"
+	tagit = !~/.config/scripts/tagit.sh
 	unstage = restore --staged
 [credential]
 	helper = store
